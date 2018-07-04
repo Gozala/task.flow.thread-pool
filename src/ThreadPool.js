@@ -9,6 +9,48 @@ export interface ThreadManager extends Thread {
   kill(): void;
 }
 
+class PromiseFuture<x, a> implements Future<empty, void> {
+  static pool: Pool<PromiseFuture<x, a>> = new Pool()
+
+  resolve: a => void
+  reject: x => void
+  future: Future<x, a>
+  isOk = true
+  value = undefined
+  static new(resolve: a => void, reject: x => void, future: Future<x, a>) {
+    const self = this.pool.new(this)
+    self.resolve = resolve
+    self.reject = reject
+    self.future = future
+    return self
+  }
+  delete() {
+    delete this.resolve
+    delete this.reject
+    delete this.future
+    PromiseFuture.pool.delete(this)
+  }
+  recycle(lifecycle) {}
+  poll() {
+    const result = this.future.poll()
+    if (result == null) {
+      return result
+    } else {
+      if (result.isOk) {
+        this.resolve(result.value)
+      } else {
+        this.reject(result.error)
+      }
+      this.delete()
+      return this
+    }
+  }
+  abort() {
+    this.future.abort()
+    this.delete()
+  }
+}
+
 export default class ThreadPool implements ThreadManager {
   static pool: Pool<ThreadPool> = new Pool()
   isParked: boolean
@@ -32,9 +74,11 @@ export default class ThreadPool implements ThreadManager {
     ThreadPool.new().run(task)
   }
   static promise<x, a>(task: Task<x, a>): Promise<a> {
-    return new Promise((resolve, reject) =>
-      ThreadPool.spawn(task.map(resolve).recover(reject))
-    )
+    return new Promise((resolve, reject) => {
+      const thread = ThreadPool.pool.new(ThreadPool)
+      thread.future = PromiseFuture.new(resolve, reject, task.spawn(thread))
+      thread.work()
+    })
   }
   kill() {
     this.future.abort()
