@@ -12,9 +12,9 @@
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
 
-"@task.flow/type@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@task.flow/type/-/type-0.1.0.tgz#cd7a859cc7d109985d4e3ee3faf5f70cdf568be7"
+"@task.flow/type@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@task.flow/type/-/type-0.2.0.tgz#6a5df5d7b2cd3dd9aa1e1b93e12a6bd77ae3d576"
 
 "@types/estree@0.0.39":
   version "0.0.39"
