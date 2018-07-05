@@ -4,7 +4,7 @@ import type { Task, Future, Thread, Park } from "@task.flow/type"
 import Pool from "pool.flow"
 import type { Lifecycle } from "pool.flow"
 
-export interface ThreadManager extends Thread {
+export interface ThreadManager {
   run(Task<empty, void>): void;
   kill(): void;
 }

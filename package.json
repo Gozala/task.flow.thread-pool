@@ -1,5 +1,5 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.2",
   "name": "@task.flow/thread-pool",
   "description": "Thread pool scheduler for task.flow",
   "keywords": [
